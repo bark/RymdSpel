@@ -16,4 +16,15 @@ class TileItem{
     getWeigth(){
         return this.weigth;
     }
+    checkOkeySpot(){
+        this.posebleDirections={};
+        this.posebleDirections.right=true;
+        this.posebleDirections.left=true;
+        this.posebleDirections.top=true;
+        this.posebleDirections.down=true;
+        return true;
+    }
+    calculateDirection(){
+
+    }
 }

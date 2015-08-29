@@ -26,6 +26,11 @@ function init() {
         chosenBuildThing=Wall;
 
     });
+    var engineButton=$("<button>").html("engine");
+    $(".buildMenu").append(engineButton);
+    engineButton.click(function(){
+        chosenBuildThing=Engine;
+    });
 
     var wallButton=$("<button>").html("CalculateCentrumPoint");
     $(".buildMenu").append(wallButton);

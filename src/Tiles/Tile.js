@@ -10,23 +10,18 @@ class Tile{
         this.mesh.isVisible=false;
     }
     addItem(item){
-        this.items.push(item);
-        var meshThing=item.render(this.scene);
-        meshThing.parent=this.mesh;
-    }
-
-    render(scene) {
-
-       /* tile.isVisible=false;
-        for(let item of this.items){
-            var meshThing=item.render(scene,this.neighbors);
-
-            meshThing.parent=tile;
+        if(item.checkOkeySpot(this.neighbors)) {
+            item.calculateDirection();
+            this.items.push(item);
+            var meshThing = item.render(this.scene);
+            meshThing.parent = this.mesh;
         }
-        return tile;*/
     }
+
     setNeighbors(neighbors){
+        neighbors.local=this;
         this.neighbors=neighbors;
+
     }
     getMesh(){
        return this.mesh;
@@ -40,19 +35,37 @@ class Tile{
     }
 
 
-    having(name){
+    having(name,valueCheck){
         for(let item of this.items){
             if(item.constructor.name===name){
-                return true;
+                if(valueCheck===undefined){
+                    return true;
+                }else if(item[valueCheck.obj]==valueCheck.value){
+                    return true;
+
+                }
+
+
             }
         }
         return false;
     }
-    addTempItem(item){
+    getItem(name){
+        for(let item of this.items){
+            if(item.constructor.name===name){
+                return item;
+            }
+        }
+    }
 
-        this.tempItems.push(item);
-        var meshThing=item.render(this.scene,true);
-        meshThing.parent=this.mesh;
+
+    addTempItem(item){
+        if(item.checkOkeySpot(this.neighbors)) {
+            item.calculateDirection();
+            this.tempItems.push(item);
+            var meshThing = item.render(this.scene, true);
+            meshThing.parent = this.mesh;
+        }
 
     }
     removeTemp(){

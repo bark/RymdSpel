@@ -8,30 +8,52 @@ class Wall extends  TileItem{
     constructor(x,z) {
         super();
         this.weigth=100;
-
+        this.klickedPoint={x,z};
         if (typeof(x)==='string'){
             this.walkable = false;
             this.direction=x;
         }else{
-            if(Math.abs(x)>Math.abs(z)){
-                //only care aboute X
-                if(x>0){
-                    this.direction="right";
-                }else{
-                    this.direction="left";
-                }
-            }else{
-                if(z>0){
-                    this.direction="top";
-                }else{
-                    this.direction="down";
-                }
-            }
+           // this.calculateDirection();
 
         }
 
 
     }
+    calculateDirection(){
+
+        var pointList=[];
+        pointList.push(this.getPointsFromdirections("right",this.klickedPoint));
+        pointList.push(this.getPointsFromdirections("left",this.klickedPoint));
+        pointList.push(this.getPointsFromdirections("top",this.klickedPoint));
+        pointList.push(this.getPointsFromdirections("down",this.klickedPoint));
+        console.log(pointList);
+        var pointlistSorted=_.sortBy(pointList,"value");
+        console.log(pointlistSorted);
+        this.direction=pointlistSorted[0].direction;
+
+
+    }
+    getPointsFromdirections(direction,value){
+        if(this.posebleDirections[direction]){
+            switch (direction){
+                case "right":
+                    return {direction: direction, value: 0.5-value.x};
+                    break;
+                case "left":
+                    return {direction: direction, value: 0.5+value.x};
+                    break;
+                case "top":
+                    return {direction: direction, value: 0.5-value.z};
+                    break;
+                case "down":
+                    return {direction: direction, value: 0.5+value.z};
+                    break;
+
+            }
+
+        }
+    }
+
 
 
     render(scene,temp) {
