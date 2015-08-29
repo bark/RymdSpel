@@ -1,0 +1,31 @@
+{
+  "name": "rymdSpel",
+  "version": "0.0.0",
+  "authors": [
+    "Erik Axelsson <erikaxelsson1@gmail.com>"
+  ],
+  "description": "Ska bli ett webGL spel som har hämtat inspration från team hospital",
+  "main": "index.html",
+  "moduleType": [
+    "es6"
+  ],
+  "keywords": [
+    "Game",
+    "Space"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "babylonjs": "~2.0.0",
+    "requirejs": "~2.1.20"
+  },
+  "devDependencies": {
+    "livereload-js": "~2.2.1"
+  }
+}
