@@ -1,11 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script type="text/javascript" src="/jquery/dist/jquery.min.js" ></script>
     <link rel="stylesheet" href="css/main.css">
 
-    <script type="text/javascript" src="/babylonjs/babylon.2.1-beta.debug.js" ></script>
-    <script type="text/javascript" src="/underscore/underscore-min.js" ></script>
+    <script type="text/javascript" src="/allBower.js" ></script>
     <meta charset="UTF-8">
     <title></title>
 
@@ -16,7 +14,16 @@
     <script type="text/javascript" src="/all.js" ></script>
     <div class="fps"></div>
 
-    <div class="buildMenu"></div>
+
+    <div class="rigthMenu">
+        <input type="checkbox" id="buildModeToggle" value="Bike">Build mode<br><br>
+        <div class="buildMenu" style="display: none">
+
+        </div>
+        <div class="driveMenu" >
+
+        </div>
+    </div>
     <div class="controllMenu"></div>
     </body>
 </html>

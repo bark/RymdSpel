@@ -9,6 +9,19 @@ class Floor extends  TileItem{
 
         this.weigth=100;
     }
+
+  /*  checkOkeySpot(neighbors) {
+        if (neighbors.right.having("Floor")||neighbors.left.having("Floor")||neighbors.top.having("Floor")||neighbors.down.having("Floor")){
+            this.posebleDirections = {};
+            this.posebleDirections.right = true;
+            this.posebleDirections.left = true;
+            this.posebleDirections.top = true;
+            this.posebleDirections.down = true;
+            return true;
+        }
+        return false;
+    }
+*/
     render(scene,temp) {
 
         //var floorTot = BABYLON.Mesh.CreateBox("wall", 0.1, scene);

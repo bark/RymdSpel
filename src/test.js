@@ -7,34 +7,39 @@ function init() {
     var engine = new BABYLON.Engine(canvas, true);
     var ship;
     var scene;
+    var camera;
 
     var golvKnapp=$("<button>").html("golv");
-    var chosenBuildThing=undefined;
+    var chosenBuildThing;
     var intervalId;
+    var currentKeys=[];
+
+
     $(".buildMenu").append(golvKnapp);
 
     var temparray=[];
-    golvKnapp.click(function(){
+    golvKnapp.click(function(event){
         chosenBuildThing=Floor;
-
+        event.stopPropagation();
     });
 
 
     var wallButton=$("<button>").html("wall");
     $(".buildMenu").append(wallButton);
-    wallButton.click(function(){
+    wallButton.click(function(event){
         chosenBuildThing=Wall;
-
+        event.stopPropagation();
     });
     var engineButton=$("<button>").html("engine");
     $(".buildMenu").append(engineButton);
-    engineButton.click(function(){
+    engineButton.click(function(event){
         chosenBuildThing=Engine;
+        event.stopPropagation();
     });
 
-    var wallButton=$("<button>").html("CalculateCentrumPoint");
-    $(".buildMenu").append(wallButton);
-    wallButton.click(function(){
+    var calculateCentrumPoint=$("<button>").html("CalculateCentrumPoint");
+    $(".driveMenu").append(calculateCentrumPoint);
+    calculateCentrumPoint.click(function(){
         var centrumPoint=ship.calculateWeigthCenter();
         console.log(centrumPoint);
         var mesh =BABYLON.Mesh.CreateSphere("sphere", 10.0, 0.5, scene);
@@ -43,11 +48,34 @@ function init() {
         mesh.position.z += centrumPoint.z;
         var material = new BABYLON.StandardMaterial("material01", scene);
         material.diffuseColor = new BABYLON.Color3(0, 1, 0);
-
-
-
     });
 
+
+    var centerCammeran=function(){
+        var centrumPoint=ship.calculateWeigthCenter();
+        console.log(centrumPoint);
+        console.log("camera.position.z"+camera.position.z+" camera.position.x"+camera.position.x);
+        camera.position.z= centrumPoint.z-camera.position.y;
+        camera.position.x = centrumPoint.x;
+        console.log("camera.position.z"+camera.position.z+" camera.position.x"+camera.position.x);
+    };
+    var centerCammeranButton=$("<button>").html("Center cameran");
+    $(".driveMenu").append(centerCammeranButton);
+
+    centerCammeranButton.click(centerCammeran);
+
+
+
+
+    $("#buildModeToggle").click(function(){
+        buildMode=!buildMode;
+        console.log("buildMode"+buildMode);
+        if(buildMode){
+            $(".buildMenu").show();
+        }else{
+            $(".buildMenu").hide();
+        }
+    });
 
 
 
@@ -125,61 +153,110 @@ function init() {
 
         function setUpCamera() {
             // This creates and positions a free camera (non-mesh)
-            var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 15, -10), scene);
+            camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 10, -10), scene);
+            camera.setTarget(BABYLON.Vector3.Zero());
 
+            centerCammeran();
             //camera.attachControl(canvas, true);
             // This targets the camera to scene origin
-            camera.setTarget(BABYLON.Vector3.Zero());
-            camera.cameraDirection.z +=5;
-            camera.cameraDirection.x +=5;
+           // camera.cameraDirection.z +=5;
+           // camera.cameraDirection.x +=5;
+/*
+            var accz=1;
+            var animationBox = new BABYLON.Animation("myAnimation", "position.z", 60,
+                BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_RELATIVE);
+            // An array with all animation keys
+            var keys = [];
+
+            //At the animation key 0, the value of scaling is "1"
+            keys.push({
+                frame: 0,
+                value: 0
+            });
+
+
+            //At the animation key 100, the value of scaling is "1"
+            keys.push({
+                frame: 100,
+                value: accz
+            });
+            animationBox.setKeys(keys);
+
+            ship.getMesh().animations.push(animationBox);
+            scene.beginAnimation(ship.getMesh(), 0, 100, true);
+*/
+            var accZ=0;
+
             $(window).keydown(function (e) {
                 console.log(e);
                 var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
                 console.log(key)
-                var step = 0.5;
-                if (key === 87) {
-                    camera.cameraDirection.z += step;
-                }
-                if (key === 83) {//83
-                    camera.cameraDirection.z -= step;
-                }
-                if (key === 65) {
-                    camera.cameraDirection.x -= step;
-                }
-                if (key === 68) {
-                    camera.cameraDirection.x += step;
-                }
-                if(key==69){
-                    // ArcRotateCamera >> Camera turning around a 3D point (here Vector zero) with mouse and cursor keys
-                    // Parameters : name, alpha, beta, radius, target, scene
-                    //var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
 
-                    scene.activeCamera.detachControl(canvas); // Detach FreeCamera
-                    scene.activeCamera = cameraFree[1]; // active Camera ArcRotate
-                    scene.activeCamera.attachControl(canvas); // attache camera ArcRotate
 
-                    cameraFree[1].target.x = _mesh.position.x;
-                    cameraFree[1].target.y = _mesh.position.y + 5;
-                    cameraFree[1].target.z = _mesh.position.z;
-                    cameraFree[1].radius = 20;
-                    CameraChanged = true;
-                }
-                if(key==81){
-                    // ArcRotateCamera >> Camera turning around a 3D point (here Vector zero) with mouse and cursor keys
-                    // Parameters : name, alpha, beta, radius, target, scene
+                if(buildMode) {
+                    var step = 0.5;
+                    if (key === 87) {
+                        camera.cameraDirection.z += step;
+                    }
+                    if (key === 83) {//83
+                        camera.cameraDirection.z -= step;
+                    }
+                    if (key === 65) {
+                        camera.cameraDirection.x -= step;
+                    }
+                    if (key === 68) {
+                        camera.cameraDirection.x += step;
+                    }
+                    if (key == 69) {
+                        // ArcRotateCamera >> Camera turning around a 3D point (here Vector zero) with mouse and cursor keys
+                        // Parameters : name, alpha, beta, radius, target, scene
+                        //var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 1, 0.8, 10, new BABYLON.Vector3(0, 0, 0), scene);
+                        camera.rotation.y += Math.PI / 4;
+                        camera.position.z = camera.position.z + camera.position.y;
+                        camera.position.x = camera.position.x + camera.position.y;
 
-                    scene.activeCamera.detachControl(canvas); // detach ArcRotateCamera
-                    scene.activeCamera = cameraFree[0]; // Active FreeCamera
-                    scene.activeCamera.attachControl(canvas); // Attache FreeCamera
+                    }
+                    if (key == 81) {
+                        camera.rotation.y -= Math.PI / 4;
+                        camera.position.z = camera.position.z + camera.position.y;
+                        camera.position.x = camera.position.x - camera.position.y;
+                    }
+                }else{
 
-                    cameraFree[0].position.x = cameraFree[1].position.x;
-                    cameraFree[0].position.y = cameraFree[1].position.y;
-                    cameraFree[0].position.z = cameraFree[1].position.z;
-                  //  cameraFree[0].setTarget(_mesh.position);
-                    CameraChanged = false;
+
+                    if (key === 87) {//w
+                        currentKeys.push("w");
+
+                    }if (key === 83) {//s
+                        currentKeys.push("s");
+                    }
+                    if (key === 65) {//a
+                        currentKeys.push("a");
+                    }
+                    if (key === 68) {//d
+                        currentKeys.push("d");
+                    }
+
                 }
 
                 //       alert( "Handler for .keydown() called." );
+            });
+            $(window).keyup(function (e) {
+                var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                console.log(key)
+                if (key === 87) {//w
+                    currentKeys=_.without(currentKeys,"w");
+
+                }if (key === 83) {//s
+                    currentKeys=_.without(currentKeys,"s");
+                }
+                if (key === 65) {//a
+                    currentKeys=_.without(currentKeys,"a");
+                }
+                if (key === 68) {//d
+                    currentKeys=_.without(currentKeys,"d");
+                }
+
             });
 
             $(window).on('mousewheel DOMMouseScroll', function (e) {
@@ -216,6 +293,11 @@ function init() {
     };
 
     var scene = createScene();
+
+    scene.registerBeforeRender(function () {
+
+
+    });
   /*  $("#renderCanvas").on("mouseover", function () {
        console.log("hover event");
     });
@@ -224,6 +306,8 @@ function init() {
     let fps = 0;
     engine.runRenderLoop(function () {
         fps++;
+        ship.keysDown(currentKeys);
+        ship.move();
         scene.render();
     });
     setInterval(function () {
@@ -241,4 +325,4 @@ function init() {
 }
 $(document).ready(function(){
     init();
-})
+});

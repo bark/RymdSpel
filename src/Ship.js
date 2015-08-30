@@ -19,8 +19,9 @@ class Ship{
 
 
     constructor(scene){
-
-
+        this.mesh = BABYLON.Mesh.CreateBox("tile", 0.1, scene);
+        this.mesh.isVisible=false;
+        this.acc={x:0,z:0}
         this.ship = [];
 
         for (let i = 0; i < 100; i++) {//x dvs columner
@@ -32,7 +33,7 @@ class Ship{
                 var mesh=tile.getMesh();
                 mesh.position.x+=i;
                 mesh.position.z+=j;
-
+                mesh.parent=this.mesh;
             }
         }
 
@@ -86,6 +87,33 @@ class Ship{
 
         console.log(this.items);
     }
+    getMesh(){
+        return this.mesh;
+    }
+
+    keysDown(keys){
+        for(let key of keys){
+            if(key=="w"){
+                this.acc.z+=0.01;
+            }
+            if(key=="s"){
+                this.acc.z-=0.01;
+            }
+            if(key=="a"){
+                this.acc.x-=0.01;
+            }
+            if(key=="d"){
+                this.acc.x+=0.01;
+            }
+        }
+
+    }
+    move(){
+        this.mesh.position.z+=this.acc.z;
+        this.mesh.position.x+=this.acc.x;
+    }
+
+
 
     render(scene){
        /* for (let i = 0; i < 100; i++) {

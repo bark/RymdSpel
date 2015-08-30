@@ -5,6 +5,8 @@ var concat = require('gulp-concat');
 var watch = require('gulp-watch');
 var connect = require('gulp-connect-multi')();
 var sass    = require('gulp-sass');
+var mainBowerFiles = require('main-bower-files');
+
 
 
 gulp.task('build', function () {
@@ -16,6 +18,18 @@ gulp.task('build', function () {
         .pipe(gulp.dest('dist'))
         .pipe(connect.reload());
 });
+
+gulp.task('bower', function () {
+    return gulp.src(mainBowerFiles('**/*.js'))
+        // Then pipe it to wanted directory, I use
+        // dist/lib but it could be anything reall
+        .pipe(concat('allBower.js'))
+        .pipe(gulp.dest('dist'));
+
+
+});
+
+
 gulp.task('watch', function () {
 
     gulp.start('connect');

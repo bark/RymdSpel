@@ -33,6 +33,19 @@ class Wall extends  TileItem{
 
 
     }
+    checkOkeySpot(neighbors) {
+        if (neighbors.local.having("Floor")){
+            this.posebleDirections = {};
+            this.posebleDirections.right = true;
+            this.posebleDirections.left = true;
+            this.posebleDirections.top = true;
+            this.posebleDirections.down = true;
+            return true;
+        }
+        return false;
+    }
+
+
     getPointsFromdirections(direction,value){
         if(this.posebleDirections[direction]){
             switch (direction){
